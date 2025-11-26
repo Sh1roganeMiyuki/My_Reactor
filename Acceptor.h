@@ -1,18 +1,19 @@
 #include "Channel.h"
-
+#include "InetAddress.h"
 
 class Acceptor{
 public:
-    Acceptor(EventLoop* loop, int listenFd);
+    Acceptor(EventLoop* loop, InetAddress& listenAddr);
     ~Acceptor();
 
-    void listen(){ acceptChannel_.enableReading(); }
+    void listen();
     void handleRead();
     void newConnectionCallback(const std::function<void(int)>& cb) {
         newConnectionCallback_ = cb;
     }
 private:
     int listenFd_;
+    InetAddress listenAddr_;
     EventLoop* loop_;
     Channel acceptChannel_;
     std::function<void(int)> newConnectionCallback_;
