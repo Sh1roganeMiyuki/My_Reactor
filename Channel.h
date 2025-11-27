@@ -9,6 +9,7 @@ using ReadCallback = std::function<void()>;
 using WriteCallback = std::function<void()>;
 using ErrorCallback = std::function<void()>;
 class Epoller;
+class EventLoop;
 class Channel{
 public:
     Channel(int fd, EventLoop *loop);

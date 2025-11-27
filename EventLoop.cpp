@@ -3,8 +3,8 @@
 #include "Epoller.h"
 class Epoller;
 class Channel;
-EventLoop::EventLoop() {
-    server_epoller = std::make_unique<Epoller>();
+EventLoop::EventLoop() : server_epoller(std::make_unique<Epoller>()) {
+    //server_epoller = std::make_unique<Epoller>();
 }
 EventLoop::~EventLoop() {
 }
