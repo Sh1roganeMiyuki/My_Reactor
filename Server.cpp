@@ -13,5 +13,5 @@ void Server::start() {
 Server::~Server() {
 }
 void Server::newConnection(int sockfd) {
-    std::cout << "Server: New connection with fd " << sockfd << std::endl;
+    std::cout << "Server: New connection with fd : " << sockfd << std::endl;
 }
