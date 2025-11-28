@@ -29,7 +29,6 @@ private:
     int fd_;
     uint32_t events_;
     uint32_t revents_;
-    //Epoller *epoller_;
     EventLoop *loop_;
     bool is_in_loop_;
 
