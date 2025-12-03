@@ -14,6 +14,10 @@ void Channel::handle_event(){
         write_callback_();
     }
 }
+void Channel::remove(){
+    loop_->delChannel(this);
+    is_in_loop_ = false;
+}
 void Channel::update(){
     if(!is_in_loop_){
         loop_->addChannel(this);

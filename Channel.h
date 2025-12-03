@@ -21,6 +21,9 @@ public:
     uint32_t get_events() const { return events_; }
     void set_revents(uint32_t revents) { revents_ = revents; }
 
+    void disableAll() { events_ = 0; update(); }
+    void remove();
+
     void setReadCallback(const ReadCallback &cb) { read_callback_ = cb; }
     void setWriteCallback(const WriteCallback &cb) { write_callback_ = cb; }
     void setErrorCallback(const ErrorCallback &cb) { error_callback_ = cb; }

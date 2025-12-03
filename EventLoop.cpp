@@ -69,7 +69,7 @@ void EventLoop::loop() {
     while (true) {
         std::vector<Channel *> active_channels;
         active_channels.clear();
-        server_epoller->wait(10000, active_channels);
+        server_epoller->wait(1, active_channels);
         for (auto channel : active_channels) {
             channel->handle_event();
         }

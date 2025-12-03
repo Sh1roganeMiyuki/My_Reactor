@@ -42,7 +42,7 @@ void Acceptor::handleRead() {
     int client_fd = accept(listenFd_, (sockaddr*)&client_addr, &client_len);
 
     if (client_fd != -1) {
-        std::cout << "New connection accepted." << std::endl;
+        //std::cout << "New connection accepted." << std::endl;
         if(newConnectionCallback_){
             newConnectionCallback_(client_fd);
         }else{

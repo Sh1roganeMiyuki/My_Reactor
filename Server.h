@@ -5,6 +5,16 @@
 #include "sys/types.h"
 #include "InetAddress.h"
 #include "Acceptor.h"
+//
+// #include <atomic>
+// #include <thread>
+// #include <chrono>
+// #include <iostream>
+
+// std::atomic<int64_t> g_totalRequestCount(0);
+
+// 
+
 class Server {
 public:
     Server(InetAddress& addr, EventLoop* loop);
@@ -17,4 +27,5 @@ private:
     InetAddress addr_;
     Acceptor acceptor_;
     EventLoop* loop_;
+    std::map<int, Channel*> channels_; 
 };
