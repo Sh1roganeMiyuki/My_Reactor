@@ -17,30 +17,33 @@ class Channel;
 class Epoller;
 int main()
 {
-    InetAddress server_address("127.0.0.1" ,8080);
+    InetAddress server_address("127.0.0.1" ,8888);
     EventLoop event_loop;
     Server server_fd(server_address, &event_loop);
+    // 1. 设置连接回调
+    // 注意：这里的参数类型必须和 Server.h 里的定义严格匹配
+    server_fd.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
+        if (conn->connected()) {
+            std::cout << "✅ Client connected! Name: " << conn->name() << std::endl;
+        } else {
+            std::cout << "❌ Client disconnected! Name: " << conn->name() << std::endl;
+        }
+    });
+
+    // 2. 设置消息回调
+    // 参数：Buffer* 是指针，用来读数据
+    server_fd.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf) {
+        // 从 Buffer 里取出所有数据
+        std::string msg = buf->retrieveAllAsString();
+        
+       // std::cout << "📨 Recv from " << conn->name() << ": " << msg << std::endl;
+        
+        // 把收到的数据原样发回去 (Echo)
+        conn->send(msg);
+    });
     server_fd.start();
-    //Channel server_channel(server_fd.getListenFd(), &event_loop);
-    // std::thread logThread([]() {
-    //     while (true) {
-    //         // 1. 睡 1 秒
-    //         std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    //         // 2. 原子操作：获取当前计数值，并重置为 0
-    //         // exchange 会返回旧值，并将 g_totalRequestCount 设为 0
-    //         int64_t count = g_totalRequestCount.exchange(0);
-
-    //         // 3. 打印结果
-    //         // 使用 printf 比 cout 稍微快一点点，而且不会被多线程打乱格式
-    //         printf("Current QPS: %ld\n", count);
-    //     }
-    // });
-    // 分离线程，让它在后台跑，主线程继续往下走
-    //logThread.detach(); 
-    //
     event_loop.loop();
 }
 
-//g++ main.cpp Server.cpp Channel.cpp Epoller.cpp EventLoop.cpp InetAddress.cpp Acceptor.cpp -o server -O2 -pthread
+//g++ main.cpp Server.cpp Channel.cpp Epoller.cpp EventLoop.cpp InetAddress.cpp Acceptor.cpp TcpConnection.cpp Buffer.cpp -o server -O2 -pthread
 //taskset -c 0 ./server

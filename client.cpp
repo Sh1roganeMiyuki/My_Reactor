@@ -59,7 +59,7 @@ int main() {
     // 配置目标：确保这里和 Server 的监听地址一致！
     // 如果 Server 监听的是 0.0.0.0 或 127.0.0.1，这里用 127.0.0.1 没问题
     const char* SERVER_IP = "127.0.0.1";
-    const int SERVER_PORT = 8080; // 你确认是 8080
+    const int SERVER_PORT = 8888; // 你确认是 8080
 
     int threadCount = 200; // 并发线程数
     std::cout << "🚀 Client launching with " << threadCount << " threads -> " 

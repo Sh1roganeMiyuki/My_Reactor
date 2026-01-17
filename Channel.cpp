@@ -4,14 +4,13 @@ Channel::Channel(int fd , EventLoop *loop) : fd_(fd), loop_(loop), is_in_loop_(f
 Channel::~Channel() {close(this->get_fd());};
 
 void Channel::handle_event(){
-    if((revents_ & EPOLLERR) && error_callback_){
-        error_callback_();
-    }
-    if((revents_ & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) && read_callback_){
-        read_callback_();
-    }
-    if((revents_ & EPOLLOUT) && write_callback_){
-        write_callback_();
+    if(tied_){
+        std::shared_ptr<void> guard = tie_.lock();
+        if(guard){
+            handle_event_with_guard(revents_);
+        }
+    }else{
+        handle_event_with_guard(revents_);
     }
 }
 void Channel::remove(){
@@ -30,4 +29,20 @@ void Channel::update(){
 void Channel::enableReading(){
     events_ |= EPOLLIN;
     update();
+}
+
+void Channel::tie(const std::shared_ptr<void>& obj){
+    tie_ = obj;
+    tied_ = true;
+}
+void Channel::handle_event_with_guard(uint32_t revents){
+    if((revents_ & EPOLLERR) && error_callback_){
+        error_callback_();
+    }
+    if((revents_ & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) && read_callback_){
+        read_callback_();
+    }
+    if((revents_ & EPOLLOUT) && write_callback_){
+        write_callback_();
+    }
 }
