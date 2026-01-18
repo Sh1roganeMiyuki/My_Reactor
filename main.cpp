@@ -1,49 +1,59 @@
-#include "sys/socket.h"
-#include "netinet/in.h"
-#include "map"
-#include "vector"
-#include "iostream"
-#include "string"
-#include "stdlib.h"
-#include <cstring>
-#include <arpa/inet.h>
-#include "Epoller.h"
-#include "Channel.h"
-#include "EventLoop.h"
-#include "InetAddress.h"
 #include "Server.h"
+#include "EventLoop.h"
+#include "TcpConnection.h"
+#include <iostream>
+#include <string>
+#include <any> // for std::any_cast
 
-class Channel;
-class Epoller;
-int main()
-{
-    InetAddress server_address("127.0.0.1" ,8888);
-    EventLoop event_loop;
-    Server server_fd(server_address, &event_loop);
-    // 1. 设置连接回调
-    // 注意：这里的参数类型必须和 Server.h 里的定义严格匹配
-    server_fd.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
-        if (conn->connected()) {
-            std::cout << "✅ Client connected! Name: " << conn->name() << std::endl;
+int main() {
+    EventLoop loop;
+    InetAddress addr("0.0.0.0", 8000);
+    Server server(addr, &loop);
+
+    server.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
+        // if (conn->connected()) {
+        //     std::cout << "Client " << conn->name() << " connected" << std::endl;
+        // } else {
+        //     std::cout << "Client " << conn->name() << " disconnected" << std::endl;
+        // }
+    });
+
+    // 2. 消息回调：核心“拼包”逻辑
+    server.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf) {
+        
+        if (!conn->hasContext()) {
+            conn->setContext(std::string());
+        }
+
+        std::string* requestData = std::any_cast<std::string>(conn->getMutableContext());
+
+        requestData->append(buf->retrieveAllAsString());
+
+        size_t eof = requestData->find("\r\n\r\n");
+        
+        if (eof != std::string::npos) {
+
+            //std::cout << "✅ Received Full HTTP Request:\n" << *requestData << std::endl;
+
+            std::string response = 
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/plain\r\n"
+                "Content-Length: 11\r\n"
+                "Connection: Keep-Alive\r\n" // 保持长连接
+                "\r\n"
+                "Hello World";
+            
+            conn->send(response);
+
+            requestData->clear();
         } else {
-            std::cout << "❌ Client disconnected! Name: " << conn->name() << std::endl;
         }
     });
 
-    // 2. 设置消息回调
-    // 参数：Buffer* 是指针，用来读数据
-    server_fd.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf) {
-        // 从 Buffer 里取出所有数据
-        std::string msg = buf->retrieveAllAsString();
-        
-       // std::cout << "📨 Recv from " << conn->name() << ": " << msg << std::endl;
-        
-        // 把收到的数据原样发回去 (Echo)
-        conn->send(msg);
-    });
-    server_fd.start();
-    event_loop.loop();
-}
+    //std::cout << "🚀 HTTP Server running on 8080..." << std::endl;
+    server.start();
+    loop.loop();
 
-//g++ main.cpp Server.cpp Channel.cpp Epoller.cpp EventLoop.cpp InetAddress.cpp Acceptor.cpp TcpConnection.cpp Buffer.cpp -o server -O2 -pthread
-//taskset -c 0 ./server
+    return 0;
+}
+//g++ main.cpp Server.cpp TcpConnection.cpp EventLoop.cpp Epoller.cpp Channel.cpp Buffer.cpp InetAddress.cpp Acceptor.cpp -o http_server -O2 -pthread -std=c++17
