@@ -35,7 +35,7 @@ public:
     std::string name() const { return name_; } // 加了 const
     bool connected() const { return state_ == 2; }
 
-    // 🚀 优化：增加重载，支持零拷贝发送
+    // 增加重载，支持零拷贝发送
     void send(const std::string& message);
     void send(const void* data, size_t len); 
 
@@ -56,7 +56,7 @@ private:
     CloseCallback closeCallback_;
 
     Buffer inputBuffer_;
-    Buffer outputBuffer_; // 暂时未启用，v10.0 会用到
+    Buffer outputBuffer_;
 
     std::any context_;
     

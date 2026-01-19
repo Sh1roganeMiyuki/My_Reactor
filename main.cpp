@@ -18,7 +18,6 @@ int main() {
         // }
     });
 
-    // 2. 消息回调：核心“拼包”逻辑
     server.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf) {
         
         if (!conn->hasContext()) {
@@ -57,3 +56,4 @@ int main() {
     return 0;
 }
 //g++ main.cpp Server.cpp TcpConnection.cpp EventLoop.cpp Epoller.cpp Channel.cpp Buffer.cpp InetAddress.cpp Acceptor.cpp -o http_server -O2 -pthread -std=c++17
+//taskset -c 0 ./http_server
