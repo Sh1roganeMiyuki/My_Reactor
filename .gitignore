@@ -13,4 +13,9 @@ app
 .idea/
 
 # 忽略构建目录（以后用CMake会用到）
-build/
+build/FlameGraph/
+FlameGraph/
+perf.data
+perf.data.old
+*.perf
+*.folded
