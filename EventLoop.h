@@ -8,6 +8,8 @@
 #include "mutex"
 class Epoller;
 class Channel;
+class TimerQueue;
+class TcpConnection;
 class EventLoop {
 public:
     //using Functor = std::function<void()>;
@@ -24,6 +26,9 @@ public:
     void addChannel(Channel *channel);
     void modChannel(Channel *channel);
     void delChannel(Channel *channel);
+
+    void addTimer(const std::shared_ptr<TcpConnection>& conn);
+
     //bool isInLoopThread() const { return thread_id_ == std::this_thread::get_id(); }
 private:
     //void handle_read();         // 读门铃
@@ -39,6 +44,7 @@ private:
 
     std::unique_ptr<Epoller> server_epoller;
     
+    std::unique_ptr<TimerQueue> timer_queue_;
     //bool calling_pending_functors_;         // 防止死锁
     //std::vector<Functor> pending_functors_; // 信箱
     //std::mutex mutex_;

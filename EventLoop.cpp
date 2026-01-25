@@ -2,6 +2,7 @@
 #include "Channel.h"  
 #include "Epoller.h"
 #include "sys/eventfd.h"
+#include "TimerQueue.h"
 class Epoller;
 class Channel;
 
@@ -27,7 +28,8 @@ int createEventfd() {
 //     wakeup_channel_->enableReading();
 // }
 EventLoop::EventLoop() 
-      : server_epoller(std::make_unique<Epoller>()) {
+      : server_epoller(std::make_unique<Epoller>()),
+      timer_queue_(std::make_unique<TimerQueue>(this))  {
 }
 EventLoop::~EventLoop() {
     // wakeup_channel_->;
@@ -65,6 +67,11 @@ EventLoop::~EventLoop() {
 //         wakeup();
 //     }
 // }
+
+void EventLoop::addTimer(const std::shared_ptr<TcpConnection>& conn) {
+    timer_queue_->addConnection(conn);
+}
+
 void EventLoop::loop() {
     while (true) {
         std::vector<Channel *> active_channels;

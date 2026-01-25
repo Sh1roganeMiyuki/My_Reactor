@@ -55,7 +55,7 @@ int main() {
 
     return 0;
 }
-//g++ main.cpp Server.cpp TcpConnection.cpp EventLoop.cpp Epoller.cpp Channel.cpp Buffer.cpp InetAddress.cpp Acceptor.cpp -o http_server -O2 -pthread -std=c++17
+//g++ main.cpp Server.cpp TcpConnection.cpp EventLoop.cpp Epoller.cpp Channel.cpp Buffer.cpp InetAddress.cpp Acceptor.cpp TimerQueue.cpp -o http_server -O2 -pthread -std=c++17
 //taskset -c 0 ./http_server
 
 

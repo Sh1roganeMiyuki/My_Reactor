@@ -5,7 +5,7 @@
 #include <any> // C++17
 #include "InetAddress.h"
 #include "Buffer.h"
-
+#include <chrono>
 class EventLoop;
 class Channel;
 class Socket; 
@@ -44,9 +44,13 @@ public:
     std::any* getMutableContext() { return &context_; }
     bool hasContext() const { return context_.has_value(); }
 
+    void keepAlive() { last_active_time_ = std::chrono::steady_clock::now(); }
+
+    std::chrono::steady_clock::time_point getLastActiveTime() const { return last_active_time_;}
+
+    void handleClose();
 private:
     void handleRead();
-    void handleClose();
     
     EventLoop* loop_;
     const std::string name_;
@@ -59,6 +63,8 @@ private:
     Buffer outputBuffer_;
 
     std::any context_;
+
+    std::chrono::steady_clock::time_point last_active_time_;
     
     std::unique_ptr<Channel> channel_;
     int state_; // 0:Disconnected, 1:Connecting, 2:Connected

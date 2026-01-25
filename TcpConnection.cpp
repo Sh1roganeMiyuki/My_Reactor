@@ -16,6 +16,7 @@ TcpConnection::TcpConnection(EventLoop* loop,
       state_(1), 
       channel_(new Channel(sockfd, loop)) 
 {
+    last_active_time_ = std::chrono::steady_clock::now();
     int opt = 1;
     int ret = ::setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &opt, sizeof opt);
     if (ret < 0) {
@@ -42,7 +43,7 @@ void TcpConnection::connectEstablished() {
 void TcpConnection::handleRead() {
     int savedErrno = 0;
     ssize_t n = inputBuffer_.readFd(channel_->get_fd(), &savedErrno);
-
+    keepAlive();
     if (n > 0) {
         if (messageCallback_) {
             messageCallback_(shared_from_this(), &inputBuffer_);
@@ -80,6 +81,7 @@ void TcpConnection::connectDestroyed() {
 // 旧接口复用新逻辑
 void TcpConnection::send(const std::string &message){
     send(message.data(), message.size());
+    keepAlive();
 }
 
 // 优化

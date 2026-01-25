@@ -16,7 +16,7 @@ Server::Server(InetAddress& addr, EventLoop* loop) : addr_(addr), acceptor_(loop
     acceptor_.newConnectionCallback(
         [this](int sockfd) { this->newConnection(sockfd); }
     );
-
+    
 }
 void Server::newConnection(int sockfd) {
     std::string connName = "Conn-" + std::to_string(sockfd);
@@ -37,8 +37,12 @@ void Server::newConnection(int sockfd) {
         this->removeConnection(conn); 
     }
 );
+    // 将 conn 放入 map
+    connections_[connName] = conn;
 
+    
     conn->connectEstablished();
+    loop_->addTimer(conn); 
 }
 
 void Server::removeConnection(const std::shared_ptr<TcpConnection>& conn) {
