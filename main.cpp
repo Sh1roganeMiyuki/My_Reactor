@@ -59,4 +59,10 @@ int main() {
 //taskset -c 0 ./http_server
 
 
-//taskset -c 1-3 wrk -t4 -c500 -d30s --latency http://127.0.0.1:8000/        9.5w指令    
+//taskset -c 1-3 wrk -t4 -c500 -d30s --latency http://127.0.0.1:8000/    
+
+//pidof http_server
+//pidstat -w -t -p 1499 1
+//pidstat -w -t -C wrk 1
+
+// echo 3 | sudo tee /proc/sys/vm/drop_caches
