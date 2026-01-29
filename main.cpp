@@ -4,8 +4,12 @@
 #include <iostream>
 #include <string>
 #include <any> // for std::any_cast
+#include <signal.h>
 
 int main() {
+    // 忽略 SIGPIPE 信号，防止服务器意外退出
+    signal(SIGPIPE, SIG_IGN); 
+
     EventLoop loop;
     InetAddress addr("0.0.0.0", 8000);
     Server server(addr, &loop);

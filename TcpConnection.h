@@ -48,6 +48,8 @@ public:
 
     std::chrono::steady_clock::time_point getLastActiveTime() const { return last_active_time_;}
 
+    void handleWrite(); 
+
     void handleClose();
 private:
     void handleRead();

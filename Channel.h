@@ -30,6 +30,10 @@ public:
     void setErrorCallback(const ErrorCallback &cb) { error_callback_ = cb; }
 
     void tie(const std::shared_ptr<void>& obj);
+
+    void enableWriting() { events_ |= EPOLLOUT; update(); }
+    void disableWriting() { events_ &= ~EPOLLOUT; update(); }
+    bool isWriting() const { return events_ & EPOLLOUT; }
 private:
     int fd_;
     uint32_t events_;
