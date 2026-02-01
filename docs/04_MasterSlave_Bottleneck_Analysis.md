@@ -46,9 +46,9 @@
   - mutex 关键字占有 0.4% ，thread 关键字占有 1.4%， malloc & free 关键字占有 3.1% 。
   - **epoll_wait 调用栈占用率为 11.6%**，相较于四线程增加, 初步判断为**主线程分发能力瓶颈**，导致从线程饥饿。
   - **出现极深的调用栈**。
-  ![alt text](image-32.png)
+![alt text](image-32.png)
   > *极深调用栈栈顶*
-  ![alt text](image-33.png)
+![alt text](image-33.png)
   > *栈底分支部分*
 
 关于这个极深调用栈，我进行了观察和猜测：
