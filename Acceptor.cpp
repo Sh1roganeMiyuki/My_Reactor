@@ -49,7 +49,7 @@ void Acceptor::handleRead() {
             ::close(client_fd);
         }
     }else{
-        std::cout << "Accept error." << std::endl;
+        //std::cout << "Accept error." << std::endl;
     }
 }
 

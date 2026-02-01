@@ -74,7 +74,7 @@ void TcpConnection::handleClose() {
 }
 
 void TcpConnection::connectDestroyed() {
-    if (state_ == 2) {
+    if (state_ == 2 || state_ == 0) {
         state_ = 0;
         channel_->disableAll(); 
         channel_->remove(); 
@@ -86,9 +86,22 @@ void TcpConnection::send(const std::string &message){
     send(message.data(), message.size());
     keepAlive();
 }
-
-// 优化
 void TcpConnection::send(const void* data, size_t len) {
+    if (loop_->isInLoopThread()) {
+        sendInLoop(data, len);
+    } else {
+        // 深拷贝数据， data 指针在回调执行时可能已失效
+        std::string message(static_cast<const char*>(data), len);
+        
+        // 捕获 shared_ptr 保证 conn 活着，捕获 string 副本
+        loop_->runInLoop(
+            [conn = shared_from_this(), msg = std::move(message)]() {
+                conn->sendInLoop(msg.data(), msg.size());
+            }
+        );
+    }
+}
+void TcpConnection::sendInLoop(const void* data, size_t len) {
     if (state_ != 2) return; 
 
     ssize_t nwrote = 0;

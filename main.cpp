@@ -14,6 +14,10 @@ int main() {
     InetAddress addr("0.0.0.0", 8000);
     Server server(addr, &loop);
 
+
+    server.setThreadNum(7); 
+
+
     server.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
         // if (conn->connected()) {
         //     std::cout << "Client " << conn->name() << " connected" << std::endl;
@@ -59,14 +63,17 @@ int main() {
 
     return 0;
 }
-//g++ main.cpp Server.cpp TcpConnection.cpp EventLoop.cpp Epoller.cpp Channel.cpp Buffer.cpp InetAddress.cpp Acceptor.cpp TimerQueue.cpp -o http_server -O2 -pthread -std=c++17
-//taskset -c 0 ./http_server
+//g++ -g main.cpp Server.cpp TcpConnection.cpp EventLoop.cpp Epoller.cpp Channel.cpp Buffer.cpp InetAddress.cpp Acceptor.cpp TimerQueue.cpp EventLoopThread.cpp EventLoopThreadPool.cpp -o http_server -O2 -pthread -std=c++17
+//taskset -c 0,2,4,6 ./http_server
 
 
 //taskset -c 1-3 wrk -t4 -c500 -d30s --latency http://127.0.0.1:8000/    
 
 //pidof http_server
 //pidstat -w -t -p 1499 1
+//sudo perf record -F 99 -g -p 1181 -- sleep 30
 //pidstat -w -t -C wrk 1
 
 // echo 3 | sudo tee /proc/sys/vm/drop_caches
+
+//cd ~/CppNetLearn/My4.0Rewrite

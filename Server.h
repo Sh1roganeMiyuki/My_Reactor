@@ -6,21 +6,14 @@
 #include "InetAddress.h"
 #include "Acceptor.h"
 #include "TcpConnection.h"
-// #include <atomic>
-// #include <thread>
-// #include <chrono>
-// #include <iostream>
-
-// std::atomic<int64_t> g_totalRequestCount(0);
-
-// 
+#include "EventLoopThreadPool.h"
 
 class Server {
 public:
     using ConnectionCallback = std::function<void(const std::shared_ptr<TcpConnection>&)>;
     using MessageCallback = std::function<void(const std::shared_ptr<TcpConnection>&, Buffer*)>;
     
-    // ... 构造函数 ...
+    void setThreadNum(int numThreads) { threadPool_ = std::make_unique<EventLoopThreadPool>(loop_, numThreads); }
 
     // 暴露设置接口
     void setConnectionCallback(const ConnectionCallback& cb) { connectionCallback_ = cb; }
@@ -34,7 +27,7 @@ private:
 
     void removeConnection(const std::shared_ptr<TcpConnection>& conn);
 
-
+    std::unique_ptr<EventLoopThreadPool> threadPool_; 
 
     ///int listen_fd_;
     InetAddress addr_;

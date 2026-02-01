@@ -1,30 +1,32 @@
 #include "Server.h"
 #include <iostream>
-
-//
 #include <atomic>
 #include <thread>
 #include <chrono>
 #include <iostream>
 
-//std::atomic<int64_t> g_totalRequestCount(0);
-
-// 
-
 Server::Server(InetAddress& addr, EventLoop* loop) : addr_(addr), acceptor_(loop, addr_), loop_(loop) 
 {
+    threadPool_ = std::make_unique<EventLoopThreadPool>(loop_, 0);
     acceptor_.newConnectionCallback(
         [this](int sockfd) { this->newConnection(sockfd); }
     );
     
 }
 void Server::newConnection(int sockfd) {
+    if (sockfd < 0) return; 
+    
+    EventLoop* ioLoop = threadPool_->getNextLoop();
+    if (!ioLoop) {
+        std::cerr << "ioLoop is null" << std::endl;
+        return;
+    }
     std::string connName = "Conn-" + std::to_string(sockfd);
     InetAddress localAddr("127.0.0.1", 8080);
     InetAddress peerAddr("127.0.0.1", 0);
     
     auto conn = std::make_shared<TcpConnection>(
-        loop_, connName, sockfd, localAddr, peerAddr
+        ioLoop, connName, sockfd, localAddr, peerAddr
     );
 
     connections_[connName] = conn;
@@ -43,55 +45,29 @@ void Server::newConnection(int sockfd) {
     
     conn->connectEstablished();
     loop_->addTimer(conn); 
+
+
+    ioLoop->runInLoop([conn]() {
+        conn->connectEstablished();
+    });
 }
 
 void Server::removeConnection(const std::shared_ptr<TcpConnection>& conn) {
-    size_t n = connections_.erase(conn->name());
-    (void)n; // 消除未使用变量警告
+    loop_->runInLoop([this, conn]() {
+        if (connections_.erase(conn->name()) == 0) return;
 
-    conn->connectDestroyed();
-    
+        // 关键：不要在这里让它析构！
+        // 我们把 conn 指针再次通过 std::bind 传给它所属的子线程。
+        // 这会使得引用计数重新 +1，保证了在任务执行完之前，对象不会死。
+        EventLoop* ioLoop = conn->getLoop();
+        
+        // 我们让子线程去执行 connectDestroyed
+        ioLoop->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
+    });
 }
 void Server::start() {
+    threadPool_->start();
     acceptor_.listen();
 }
 Server::~Server() {
 }
-// void Server::newConnection(int sockfd) {
-//     // 1. 创建一个新的 Channel 来管理这个客户端连接
-//     // 注意：这里我们手动 new，后面断开时记得 delete
-//     Channel* connChannel = new Channel(sockfd, loop_ );
-    
-//     // 2. 放入 map 管理
-//     channels_[sockfd] = connChannel;
-
-//     // 3. 设置读回调 (核心业务：Echo)
-//     connChannel->setReadCallback([this, sockfd, connChannel]() {
-//         char buf[1024];
-//         ssize_t n = ::read(sockfd, buf, sizeof(buf));
-//         // 
-//         //g_totalRequestCount++; 
-//         // 
-//         if (n > 0) {
-//             // 【收到数据 -> 原样发回】
-//             // 此时是单线程，直接 write 是安全的（虽然简陋，不考虑缓冲区满的情况）
-//             ::write(sockfd, buf, n); 
-//         } 
-//         else {
-//             // 【对方断开 (n=0) 或 出错 (n<0)】
-//             connChannel->disableAll();
-//             connChannel->remove(); // 从 epoll 摘除
-            
-//             ::close(sockfd);       // 关闭 fd
-            
-//             // 清理内存
-//             this->connections_.erase(sockfd);
-//             delete connChannel; 
-//         }
-//     });
-
-//     // 4. 开启读权限 (加入 epoll)
-//     connChannel->enableReading();
-    
-//     // printf("New connection fd=%d established.\n", sockfd);
-// }

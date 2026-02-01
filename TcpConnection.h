@@ -38,6 +38,9 @@ public:
     // 增加重载，支持零拷贝发送
     void send(const std::string& message);
     void send(const void* data, size_t len); 
+    void sendInLoop(const void* data, size_t len);
+
+    EventLoop* getLoop() const { return loop_; }
 
     // Context 上下文支持
     void setContext(const std::any& context) { context_ = context; }
