@@ -12,7 +12,7 @@ public:
 
     void start();
     EventLoop* getNextLoop(); // 获取下一个 Loop
-
+    std::vector<EventLoop*> getAllLoops();
 private:
     EventLoop* baseLoop_;
     int numThreads_;

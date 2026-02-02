@@ -23,3 +23,10 @@ EventLoop* EventLoopThreadPool::getNextLoop() {
     }
     return loop;
 }
+
+std::vector<EventLoop*> EventLoopThreadPool::getAllLoops() {
+    if (loops_.empty()) {
+        return std::vector<EventLoop*>(); 
+    }
+    return loops_;
+}

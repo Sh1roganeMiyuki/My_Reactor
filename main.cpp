@@ -15,7 +15,7 @@ int main() {
     Server server(addr, &loop);
 
 
-    server.setThreadNum(7); 
+    server.setThreadNum(6); 
 
 
     server.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {

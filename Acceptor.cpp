@@ -15,7 +15,13 @@ Acceptor::Acceptor(EventLoop* loop, InetAddress& listenAddr) :
     }
     
     int opt = 1;
+
     setsockopt(listenFd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    if(::setsockopt(listenFd_, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) < 0) {
+        perror("setsockopt SO_REUSEPORT failed");
+    }
+
     if(bind(listenFd_, listenAddr_.getSockAddr(), listenAddr_.getAddrLen()) < 0){
         std::cerr << "Bind failed" << std::endl;
         exit(EXIT_FAILURE);

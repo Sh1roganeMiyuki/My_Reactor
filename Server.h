@@ -22,7 +22,7 @@ public:
     ~Server();
     //int getListenFd() const { return listen_fd_; }
     void start();
-    void newConnection(int sockfd);
+    void newConnection(int sockfd, EventLoop* ioLoop);
 private:
 
     void removeConnection(const std::shared_ptr<TcpConnection>& conn);
@@ -31,7 +31,12 @@ private:
 
     ///int listen_fd_;
     InetAddress addr_;
-    Acceptor acceptor_;
+
+    std::vector<std::unique_ptr<Acceptor>> subAcceptors_; 
+    std::mutex acceptorMutex_;
+
+    std::mutex connMutex_; 
+    
     EventLoop* loop_;
     using ConnectionMap = std::map<std::string, std::shared_ptr<TcpConnection>>; 
     ConnectionMap connections_;
