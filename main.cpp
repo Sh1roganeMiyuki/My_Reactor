@@ -15,8 +15,8 @@ int main() {
     Server server(addr, &loop);
 
 
-    server.setThreadNum(6); 
-
+    server.setThreadNum(8); 
+    std::cout << "🚀 HTTP Server running on 8000..." << std::endl;
 
     server.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
         // if (conn->connected()) {
