@@ -45,5 +45,5 @@ private:
     std::set<TimerNode> timers_;
     
     // 超时时间30s
-    static const int kKeepAliveTimeout = 30; 
+    inline static const int kKeepAliveTimeout = 30; 
 };

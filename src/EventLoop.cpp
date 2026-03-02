@@ -51,7 +51,6 @@ void EventLoop::handleRead() {
 }
 void EventLoop::quit() {
     quit_ = true;
-    // 如果是在其他线程调用 quit，必须唤醒 loop 才能让它跳出 while
     if (!isInLoopThread()) {
         wakeup();
     }
@@ -81,7 +80,6 @@ void EventLoop::doPendingFunctors() {
     calling_pending_functors_ = true;
 
     {
-        // 关键优化：交换，减小锁的粒度
         std::lock_guard<std::mutex> lock(mutex_);
         functors.swap(pending_functors_);
     }

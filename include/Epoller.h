@@ -18,7 +18,5 @@ public:
     void wait(int timeout_ms, std::vector<Channel*>& active_channels);
 private:
     int epoll_fd_;
-    // uint32_t events_;
-    // uint32_t revents_;
     std::map<int, Channel*> channel_map_;
 };

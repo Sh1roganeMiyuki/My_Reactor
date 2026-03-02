@@ -68,7 +68,7 @@ int main() {
 
 
 //taskset -c 1-3 wrk -t4 -c500 -d30s --latency http://127.0.0.1:8000/    
-
+//taskset -c 1-3 wrk -t4 -c500 -d30s -H "Connection: close" --latency http://127.0.0.1:8000/
 //pidof http_server
 //pidstat -w -t -p 1499 1
 //sudo perf record -F 99 -g -p 1181 -- sleep 30

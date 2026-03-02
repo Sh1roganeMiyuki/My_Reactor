@@ -15,12 +15,10 @@ public:
     
     void setThreadNum(int numThreads) { threadPool_ = std::make_unique<EventLoopThreadPool>(loop_, numThreads); }
 
-    // 暴露设置接口
     void setConnectionCallback(const ConnectionCallback& cb) { connectionCallback_ = cb; }
     void setMessageCallback(const MessageCallback& cb) { messageCallback_ = cb; }
     Server(InetAddress& addr, EventLoop* loop);
     ~Server();
-    //int getListenFd() const { return listen_fd_; }
     void start();
     void newConnection(int sockfd, EventLoop* ioLoop);
 private:
@@ -29,7 +27,6 @@ private:
 
     std::unique_ptr<EventLoopThreadPool> threadPool_; 
 
-    ///int listen_fd_;
     InetAddress addr_;
 
     std::vector<std::unique_ptr<Acceptor>> subAcceptors_; 

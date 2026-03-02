@@ -16,7 +16,6 @@ EventLoop* EventLoopThread::startLoop() {
 
     EventLoop* loop = nullptr;
     {
-        // 等待线程启动并创建好 Loop
         std::unique_lock<std::mutex> lock(mutex_);
         while (loop_ == nullptr) {
             cond_.wait(lock);
@@ -27,7 +26,7 @@ EventLoop* EventLoopThread::startLoop() {
 }
 
 void EventLoopThread::threadFunc() {
-    EventLoop loop; // 栈上对象，One Loop Per Thread 的核心
+    EventLoop loop; 
 
     {
         std::unique_lock<std::mutex> lock(mutex_);
@@ -35,7 +34,7 @@ void EventLoopThread::threadFunc() {
         cond_.notify_one();
     }
 
-    loop.loop(); // 开始循环
+    loop.loop(); 
 
     // 退出处理
     std::lock_guard<std::mutex> lock(mutex_);

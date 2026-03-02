@@ -7,11 +7,11 @@ class EventLoopThread;
 
 class EventLoopThreadPool {
 public:
-    EventLoopThreadPool(EventLoop* baseLoop, int numThreads); // numThreads: 线程数
+    EventLoopThreadPool(EventLoop* baseLoop, int numThreads); 
     ~EventLoopThreadPool();
 
     void start();
-    EventLoop* getNextLoop(); // 获取下一个 Loop
+    EventLoop* getNextLoop(); 
     std::vector<EventLoop*> getAllLoops();
 private:
     EventLoop* baseLoop_;
