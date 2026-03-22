@@ -1,25 +1,17 @@
 #pragma once
-#include <set>
 #include <vector>
+#include <unordered_set>
 #include <memory>
-#include <chrono>
 #include "Channel.h"
 
-class EventLoop;
 class TcpConnection;
+class EventLoop;
 
-struct TimerNode {
-    std::chrono::steady_clock::time_point expire;
-    // 使用 weak_ptr 防止循环引用，不阻碍连接销毁
-    std::weak_ptr<TcpConnection> connection; 
- 
-    // 重载 < 用于 set 排序
-    bool operator<(const TimerNode& other) const {
-        if (expire != other.expire) 
-            return expire < other.expire;
-        // 如果时间完全相同，比较指针地址，保证 set 不去重
-        return connection.lock().get() < other.connection.lock().get();
-    }
+// 魔法对象：利用 RAII 机制自动断开超时连接
+struct TimerEntry {
+    std::weak_ptr<TcpConnection> weakConn_;
+    explicit TimerEntry(std::weak_ptr<TcpConnection> conn) : weakConn_(conn) {}
+    ~TimerEntry(); 
 };
 
 class TimerQueue {
@@ -27,23 +19,19 @@ public:
     explicit TimerQueue(EventLoop* loop);
     ~TimerQueue();
 
-    // 添加新连接的监控
     void addConnection(const std::shared_ptr<TcpConnection>& conn);
+    // 新增：刷新连接（心跳）
+    void refreshConnection(const std::shared_ptr<TcpConnection>& conn);
 
 private:
-    // timerfd 触发时的回调
     void handleRead();
-    
-    // 重新设置 timerfd 的内核闹钟
-    void resetTimerfd();
 
     EventLoop* loop_;
     int timerfd_;
     std::unique_ptr<Channel> timer_channel_;
     
-    // 红黑树：按过期时间自动排序
-    std::set<TimerNode> timers_;
-    
-    // 超时时间30s
-    inline static const int kKeepAliveTimeout = 30; 
+    // 时间轮核心数据结构：30 个槽位，每个槽位是一个哈希集合
+    using EntryPtr = std::shared_ptr<TimerEntry>;
+    std::vector<std::unordered_set<EntryPtr>> wheel_;
+    size_t current_bucket_;
 };

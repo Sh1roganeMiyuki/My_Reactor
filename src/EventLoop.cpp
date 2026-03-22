@@ -90,10 +90,11 @@ void EventLoop::doPendingFunctors() {
     calling_pending_functors_ = false;
 }
 
-
-
 void EventLoop::addTimer(const std::shared_ptr<TcpConnection>& conn) {
     timer_queue_->addConnection(conn);
+}
+void EventLoop::refreshTimer(const std::shared_ptr<TcpConnection>& conn) {
+    timer_queue_->refreshConnection(conn);
 }
 
 void EventLoop::loop() {

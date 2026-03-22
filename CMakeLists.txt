@@ -8,7 +8,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
-add_executable(http_server example/main.cpp ${SOURCES})
+add_executable(http_server ${PROJECT_SOURCE_DIR}/example/main.cpp ${SOURCES})
 
 target_link_libraries(http_server pthread)
 

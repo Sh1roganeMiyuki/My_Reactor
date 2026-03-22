@@ -7,7 +7,7 @@
 
 Server::Server(InetAddress& addr, EventLoop* loop) : addr_(addr), loop_(loop) 
 {
-    
+    threadPool_ = std::make_unique<EventLoopThreadPool>(loop_, 0);
 }
 void Server::newConnection(int sockfd, EventLoop* ioLoop) {
     if (sockfd < 0) return;
@@ -33,6 +33,8 @@ void Server::newConnection(int sockfd, EventLoop* ioLoop) {
     );
 
     conn->connectEstablished();
+    
+    ioLoop->addTimer(conn); 
 }
 
 void Server::removeConnection(const std::shared_ptr<TcpConnection>& conn) {
@@ -47,6 +49,10 @@ void Server::removeConnection(const std::shared_ptr<TcpConnection>& conn) {
     );
 }
 void Server::start() {
+    if (!threadPool_) {
+        // 如果忘记调用 setThreadNum，手动初始化一个默认的
+        threadPool_ = std::make_unique<EventLoopThreadPool>(loop_, 0);
+    }
     threadPool_->start();
     auto subLoops = threadPool_->getAllLoops();
 

@@ -48,6 +48,8 @@ void TcpConnection::handleRead() {
     ssize_t n = inputBuffer_.readFd(channel_->get_fd(), &savedErrno);
     keepAlive();
     if (n > 0) {
+        // 将连接重新扔进时间轮
+        loop_->refreshTimer(shared_from_this()); 
         if (messageCallback_) {
             messageCallback_(shared_from_this(), &inputBuffer_);
         }

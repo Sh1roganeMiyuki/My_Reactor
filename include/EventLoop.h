@@ -31,6 +31,8 @@ public:
     void addTimer(const std::shared_ptr<TcpConnection>& conn);
 
     bool isInLoopThread() const { return thread_id_ == std::this_thread::get_id(); }
+
+    void refreshTimer(const std::shared_ptr<TcpConnection>& conn);
 private:
     void handleRead();         // 读门铃
     void doPendingFunctors();   // 读任务队列

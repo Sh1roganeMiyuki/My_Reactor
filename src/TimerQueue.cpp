@@ -3,22 +3,36 @@
 #include "TcpConnection.h"
 #include <sys/timerfd.h>
 #include <unistd.h>
-#include <cstring>
 #include <iostream>
 
+// 让 timerfd 变成周期性的！每 1 秒自动响一次
 int createTimerfd() {
-    // CLOCK_MONOTONIC: 单调时钟，不受系统时间调整影响
     int tfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
-    if (tfd < 0) {
-        perror("timerfd_create failed");
-    }
+    struct itimerspec newValue{};
+    // 初始延迟 1 秒
+    newValue.it_value.tv_sec = 1; 
+    newValue.it_value.tv_nsec = 0;
+    // 之后每 1 秒触发一次
+    newValue.it_interval.tv_sec = 1; 
+    newValue.it_interval.tv_nsec = 0;
+    ::timerfd_settime(tfd, 0, &newValue, nullptr);
     return tfd;
 }
 
+TimerEntry::~TimerEntry() {
+    auto conn = weakConn_.lock();
+    if (conn) {
+        conn->handleClose(); 
+    }
+}
+
+// 初始化时间轮，大小为 30（即 30 秒超时）
 TimerQueue::TimerQueue(EventLoop* loop)
     : loop_(loop),
       timerfd_(createTimerfd()),
-      timer_channel_(new Channel(timerfd_, loop)) 
+      timer_channel_(new Channel(timerfd_, loop)),
+      wheel_(30),             // 30 个桶
+      current_bucket_(0)      // 初始指针指向 0
 {
     timer_channel_->setReadCallback([this]() { this->handleRead(); });
     timer_channel_->enableReading();
@@ -31,68 +45,34 @@ TimerQueue::~TimerQueue() {
 }
 
 void TimerQueue::addConnection(const std::shared_ptr<TcpConnection>& conn) {
-    auto now = std::chrono::steady_clock::now();
-    // 30秒 后过期
-    auto expire = now + std::chrono::seconds(kKeepAliveTimeout);
-    
-    conn->keepAlive(); // 初始刷新
-    timers_.insert({expire, conn});
+    // 1. 创建包裹对象
+    auto entry = std::make_shared<TimerEntry>(conn);
+    // 2. 让连接记住自己的包裹
+    conn->setTimerEntry(entry);
+    // 3. 放到 29 秒后的槽位里 (当前时间 + 29)
+    size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
+    wheel_[next_bucket].insert(entry);
+}
 
-    if (timers_.begin()->expire == expire) {
-        resetTimerfd();
+void TimerQueue::refreshConnection(const std::shared_ptr<TcpConnection>& conn) {
+    // 拿到之前的包裹对象
+    auto entry = std::static_pointer_cast<TimerEntry>(conn->getTimerEntry());
+    if (entry) {
+        // 直接再扔进最新槽位！旧槽位不用管，时间到了它会自动释放一层引用计数
+        size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
+        wheel_[next_bucket].insert(entry);
     }
 }
 
 void TimerQueue::handleRead() {
+    // 必须读出 timerfd 的 8 字节，否则会一直触发 epoll
     uint64_t one;
-    ssize_t n = ::read(timerfd_, &one, sizeof one);
-    (void)n;
+    ::read(timerfd_, &one, sizeof one);
 
-    auto now = std::chrono::steady_clock::now();
-
-    while (!timers_.empty()) {
-        // 拿到最早过期的那个
-        auto it = timers_.begin();
-        
-        if (it->expire > now) break;
-
-        auto node = *it;
-        timers_.erase(it); // 移除
-
-        auto conn = node.connection.lock();
-        if (conn) {
-            // 检查它最近活跃时间 + 30s 是否大于现在
-            auto lastActive = conn->getLastActiveTime();
-            auto realExpire = lastActive + std::chrono::seconds(kKeepAliveTimeout);
-            
-            if (realExpire > now) {
-                // 重新插入 set
-                timers_.insert({realExpire, node.connection});
-            } else {
-                 std::cout << "Timeout shutting down: " << conn->name() << std::endl;
-                conn->handleClose(); 
-            }
-        }
-    }
-    resetTimerfd();
-}
-
-void TimerQueue::resetTimerfd() {
-    struct itimerspec newValue;
-    memset(&newValue, 0, sizeof newValue);
-
-    if (!timers_.empty()) {
-        auto nextExpire = timers_.begin()->expire;
-        auto now = std::chrono::steady_clock::now();
-        
-        // 计算时间差 (微秒)
-        int64_t delay = std::chrono::duration_cast<std::chrono::microseconds>(nextExpire - now).count();
-        if (delay < 100) delay = 100; // 最小延时，防止负数
-
-        newValue.it_value.tv_sec = delay / 1000000;
-        newValue.it_value.tv_nsec = (delay % 1000000) * 1000;
-    }
+    current_bucket_ = (current_bucket_ + 1) % wheel_.size();
     
-    // 如果 set 空了，newValue 全为 0，相当于关闭定时器
-    ::timerfd_settime(timerfd_, 0, &newValue, nullptr);
+    // std::cout << "DEBUG: Timer tick, bucket index: " << current_bucket_ 
+    //           << " size: " << wheel_[current_bucket_].size() << std::endl;
+
+    wheel_[current_bucket_].clear(); 
 }

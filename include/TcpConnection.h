@@ -54,7 +54,12 @@ public:
     void handleWrite(); 
 
     void handleClose();
+
+    void setTimerEntry(const std::shared_ptr<void>& entry) { timer_entry_ = entry; }
+    std::shared_ptr<void> getTimerEntry() const { return timer_entry_.lock(); }
+    
 private:
+    std::weak_ptr<void> timer_entry_; 
     void handleRead();
     
     EventLoop* loop_;
