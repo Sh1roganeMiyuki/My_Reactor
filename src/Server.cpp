@@ -50,7 +50,7 @@ void Server::removeConnection(const std::shared_ptr<TcpConnection>& conn) {
 }
 void Server::start() {
     if (!threadPool_) {
-        // 如果忘记调用 setThreadNum，手动初始化一个默认的
+        // 手动初始化一个默认的
         threadPool_ = std::make_unique<EventLoopThreadPool>(loop_, 0);
     }
     threadPool_->start();

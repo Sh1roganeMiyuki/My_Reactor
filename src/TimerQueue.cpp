@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <iostream>
 
-// 让 timerfd 变成周期性的！每 1 秒自动响一次
+// 每 1 秒响一次
 int createTimerfd() {
     int tfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
     struct itimerspec newValue{};
@@ -26,7 +26,7 @@ TimerEntry::~TimerEntry() {
     }
 }
 
-// 初始化时间轮，大小为 30（即 30 秒超时）
+// 初始化时间轮
 TimerQueue::TimerQueue(EventLoop* loop)
     : loop_(loop),
       timerfd_(createTimerfd()),
@@ -45,27 +45,24 @@ TimerQueue::~TimerQueue() {
 }
 
 void TimerQueue::addConnection(const std::shared_ptr<TcpConnection>& conn) {
-    // 1. 创建包裹对象
     auto entry = std::make_shared<TimerEntry>(conn);
-    // 2. 让连接记住自己的包裹
     conn->setTimerEntry(entry);
-    // 3. 放到 29 秒后的槽位里 (当前时间 + 29)
+    // 放到 29 秒后的槽位里
     size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
     wheel_[next_bucket].insert(entry);
 }
 
 void TimerQueue::refreshConnection(const std::shared_ptr<TcpConnection>& conn) {
-    // 拿到之前的包裹对象
     auto entry = std::static_pointer_cast<TimerEntry>(conn->getTimerEntry());
     if (entry) {
-        // 直接再扔进最新槽位！旧槽位不用管，时间到了它会自动释放一层引用计数
+        // 扔进最新槽位
         size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
         wheel_[next_bucket].insert(entry);
     }
 }
 
 void TimerQueue::handleRead() {
-    // 必须读出 timerfd 的 8 字节，否则会一直触发 epoll
+    // 读出 timerfd 的 8 字节，否则一直触发 epoll
     uint64_t one;
     ::read(timerfd_, &one, sizeof one);
 
