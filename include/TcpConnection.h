@@ -78,4 +78,7 @@ private:
     
     std::unique_ptr<Channel> channel_;
     int state_; // 0:Disconnected, 1:Connecting, 2:Connected
+
+    std::chrono::steady_clock::time_point last_timer_refresh_time_;
+    std::chrono::steady_clock::time_point last_timer_push_time_;
 };

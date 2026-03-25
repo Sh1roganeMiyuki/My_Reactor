@@ -14,9 +14,11 @@ TcpConnection::TcpConnection(EventLoop* loop,
     : loop_(loop),
       name_(name),
       state_(1), 
-      channel_(new Channel(sockfd, loop)) 
+      channel_(new Channel(sockfd, loop)),
+      last_timer_push_time_(std::chrono::steady_clock::now())
 {
-    last_active_time_ = std::chrono::steady_clock::now();
+    last_timer_refresh_time_ = std::chrono::steady_clock::now();
+    //last_active_time_ = std::chrono::steady_clock::now();
     int opt = 1;
     int ret = ::setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &opt, sizeof opt);
     if (ret < 0) {
@@ -48,8 +50,12 @@ void TcpConnection::handleRead() {
     ssize_t n = inputBuffer_.readFd(channel_->get_fd(), &savedErrno);
     keepAlive();
     if (n > 0) {
+        auto now = std::chrono::steady_clock::now();
         // 将连接重新扔进时间轮
-        loop_->refreshTimer(shared_from_this()); 
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - last_timer_push_time_).count() >= 1) {
+            loop_->refreshTimer(shared_from_this()); 
+            last_timer_push_time_ = now; // 更新最后一次刷新的时间
+        }
         if (messageCallback_) {
             messageCallback_(shared_from_this(), &inputBuffer_);
         }
