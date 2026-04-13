@@ -27,86 +27,86 @@ int main() {
     });
 
     server.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf) {
-    if (!conn->hasContext()) {
-        conn->setContext(std::string());
-    }
-
-    std::string* requestData = std::any_cast<std::string>(conn->getMutableContext());
-
-    // 读取数据到 Context
-    requestData->append(buf->retrieveAllAsString());
-
-    // 检查报文定界
-    size_t eof = requestData->find("\r\n\r\n");
-    if (eof != std::string::npos) {
-        // 模拟业务逻辑
-
-        // 建立 4MB 的向量，撑爆 L2 Cache 
-        // 强迫 CPU 去 L3 甚至主存取数据，模拟真实 Session 查询的内存延迟
-        static const std::vector<int> big_session_table = [](){
-            std::vector<int> v(1024 * 1024); // 4MB 空间
-            for(size_t i = 0; i < v.size(); ++i) v[i] = static_cast<int>(i ^ 0xDEADBEEF);
-            return v;
-        }();
-
-        // 模拟深层协议解析
-        // 增加查找深度，模拟解析复杂的 HTTP Header
-        size_t ua_pos = requestData->find("User-Agent:");
-        size_t cookie_pos = requestData->find("Cookie:");
-        size_t auth_pos = requestData->find("Authorization:"); 
-
-        // 强迫堆内存分配
-        // 我们拼接一个长字符串，强迫框架调用 malloc/free，模拟真实的业务对象构建损耗。
-        std::string business_trace_id = "TRACE_ID_LONG_PREFIX_FOR_ALLOCATION_TEST_"; // > 40 bytes
-        business_trace_id.reserve(128); // 明确强制堆分配
-        business_trace_id += "NODE_001_";
-        if (ua_pos != std::string::npos) {
-            // 提取一段足够长的内容，确保不触发 SSO
-            business_trace_id += requestData->substr(ua_pos, 32); 
+        if (!conn->hasContext()) {
+            conn->setContext(std::string());
         }
 
-        // 破坏预取器的随机内存访问 
-        // 使用一个简单的伪随机算法（线性同余）来产生无法被 CPU 预取器预测的访问索引
-        int lookup_sum = 0;
-        uint32_t seed = static_cast<uint32_t>(requestData->size() + reinterpret_cast<uintptr_t>(conn.get()));
-        for (int i = 0; i < 15; ++i) {
-            seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-            lookup_sum += big_session_table[seed % big_session_table.size()];
+        std::string* requestData = std::any_cast<std::string>(conn->getMutableContext());
+
+        // 读取数据到 Context
+        requestData->append(buf->retrieveAllAsString());
+
+        // 检查报文定界
+        size_t eof = requestData->find("\r\n\r\n");
+        if (eof != std::string::npos) {
+            // 模拟业务逻辑
+
+            // 建立 4MB 的向量，撑爆 L2 Cache 
+            // 强迫 CPU 去 L3 甚至主存取数据，模拟真实 Session 查询的内存延迟
+            static const std::vector<int> big_session_table = [](){
+                std::vector<int> v(1024 * 1024); // 4MB 空间
+                for(size_t i = 0; i < v.size(); ++i) v[i] = static_cast<int>(i ^ 0xDEADBEEF);
+                return v;
+            }();
+
+            // 模拟深层协议解析
+            // 增加查找深度，模拟解析复杂的 HTTP Header
+            size_t ua_pos = requestData->find("User-Agent:");
+            size_t cookie_pos = requestData->find("Cookie:");
+            size_t auth_pos = requestData->find("Authorization:"); 
+
+            // 强迫堆内存分配
+            // 我们拼接一个长字符串，强迫框架调用 malloc/free，模拟真实的业务对象构建损耗。
+            std::string business_trace_id = "TRACE_ID_LONG_PREFIX_FOR_ALLOCATION_TEST_"; // > 40 bytes
+            business_trace_id.reserve(128); // 明确强制堆分配
+            business_trace_id += "NODE_001_";
+            if (ua_pos != std::string::npos) {
+                // 提取一段足够长的内容，确保不触发 SSO
+                business_trace_id += requestData->substr(ua_pos, 32); 
+            }
+
+            // 破坏预取器的随机内存访问 
+            // 使用一个简单的伪随机算法（线性同余）来产生无法被 CPU 预取器预测的访问索引
+            int lookup_sum = 0;
+            uint32_t seed = static_cast<uint32_t>(requestData->size() + reinterpret_cast<uintptr_t>(conn.get()));
+            for (int i = 0; i < 15; ++i) {
+                seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+                lookup_sum += big_session_table[seed % big_session_table.size()];
+            }
+
+            // 模拟中度 CPU 计算
+            // 2000 次循环约等于 10-20μs 的计算负载，模拟 Protobuf 解码或业务规则校验
+            uint64_t hash_val = 0xCBF29CE484222325ULL;
+            for (int i = 0; i < 2000; ++i) {
+                hash_val ^= (uint64_t)lookup_sum + i;
+                hash_val *= 0x100000001B3ULL; // FNV-1a 风格计算
+            }
+
+            // 强迫编译器保留结果，防止被优化掉
+            volatile uint64_t sink = hash_val + business_trace_id.size();
+            (void)sink;
+
+
+            // 3. 构建标准响应
+            std::string body = "Hello World";
+            for(size_t i = 0; i < 1000; ++i){
+                body += "0123456789";
+            }
+
+            std::string response = 
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/plain\r\n"
+                "Content-Length: " + std::to_string(body.size()) + "\r\n" 
+                "Connection: Keep-Alive\r\n"
+                "\r\n" +  
+                body;     // 拼接包体
+
+            conn->send(response);
+
+            // 4. 重置 Context (Pipeline 支持)
+            requestData->clear();
         }
-
-        // 模拟中度 CPU 计算
-        // 2000 次循环约等于 10-20μs 的计算负载，模拟 Protobuf 解码或业务规则校验
-        uint64_t hash_val = 0xCBF29CE484222325ULL;
-        for (int i = 0; i < 2000; ++i) {
-            hash_val ^= (uint64_t)lookup_sum + i;
-            hash_val *= 0x100000001B3ULL; // FNV-1a 风格计算
-        }
-
-        // 强迫编译器保留结果，防止被优化掉
-        volatile uint64_t sink = hash_val + business_trace_id.size();
-        (void)sink;
-
-
-        // 3. 构建标准响应
-        std::string body = "Hello World";
-        for(size_t i = 0; i < 1000; ++i){
-            body += "0123456789";
-        }
-
-        std::string response = 
-            "HTTP/1.1 200 OK\r\n"
-            "Content-Type: text/plain\r\n"
-            "Content-Length: " + std::to_string(body.size()) + "\r\n" 
-            "Connection: Keep-Alive\r\n"
-            "\r\n" +  
-            body;     // 拼接包体
-
-        conn->send(response);
-
-        // 4. 重置 Context (Pipeline 支持)
-        requestData->clear();
-    }
-});
+    });
 
     //std::cout << "🚀 HTTP Server running on 8080..." << std::endl;
     server.start();

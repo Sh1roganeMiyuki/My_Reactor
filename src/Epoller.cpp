@@ -1,6 +1,6 @@
 #include "Epoller.h"
 #include "Channel.h"
-Epoller::Epoller() : epoll_fd_(epoll_create1(0)) {}
+Epoller::Epoller() : epoll_fd_(epoll_create1(0)), events_(MAX_EVENTS)  {}
 Epoller::~Epoller() { close(epoll_fd_); }
 
 void Epoller::add_channel(Channel* channel) {
@@ -24,12 +24,11 @@ void Epoller::del_channel(Channel* channel) {
     //channel->modInEpoll(false);
 }
 void Epoller::wait(int timeout_ms, std::vector<Channel*>& active_channels) {
-    const int MAX_EVENTS = 1024;
-    std::vector<epoll_event> events(MAX_EVENTS);
-    int nfds = epoll_wait(epoll_fd_, events.data(), MAX_EVENTS, timeout_ms);
+    //std::vector<epoll_event> events(MAX_EVENTS);
+    int nfds = epoll_wait(epoll_fd_, events_.data(), MAX_EVENTS, timeout_ms);
     for (int i = 0; i < nfds; ++i) {
-        Channel* channel = static_cast<Channel*>(events[i].data.ptr);
-        uint32_t revents = events[i].events;
+        Channel* channel = static_cast<Channel*>(events_[i].data.ptr);
+        uint32_t revents = events_[i].events;
         channel->set_revents(revents);
         active_channels.push_back(channel);
     }
