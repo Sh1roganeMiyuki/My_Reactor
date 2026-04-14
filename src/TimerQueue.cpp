@@ -30,12 +30,16 @@ TimerEntry::~TimerEntry() {
 TimerQueue::TimerQueue(EventLoop* loop)
     : loop_(loop),
       timerfd_(createTimerfd()),
-      timer_channel_(new Channel(timerfd_, loop)),
+      //timer_channel_(new Channel(timerfd_, loop)),
       wheel_(30),             // 30 个桶
       current_bucket_(0)      // 初始指针指向 0
 {
-    timer_channel_->setReadCallback([this]() { this->handleRead(); });
-    timer_channel_->enableReading();
+    // timer_channel_->setReadCallback([this]() { this->handleRead(); });
+    // timer_channel_->enableReading();
+    for(auto& bucket : wheel_) {
+        // 预留空间
+        bucket.reserve(10000); 
+    }
 }
 
 TimerQueue::~TimerQueue() {
@@ -45,20 +49,25 @@ TimerQueue::~TimerQueue() {
 }
 
 void TimerQueue::addConnection(const std::shared_ptr<TcpConnection>& conn) {
-    auto entry = std::make_shared<TimerEntry>(conn);
-    conn->setTimerEntry(entry);
-    // 放到 29 秒后的槽位里
+    // 这里我们假设 TcpConnection 已经自己管理了一个 TimerEntry
+    // 如果没有，可以调用 conn->getOrCreateTimerEntry()
+    auto entry = conn->getTimerEntry(); 
+    
     size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
-    wheel_[next_bucket].insert(entry);
+    
+    // vector::push_back 在 reserve 过的空间内是 0 分配的
+    wheel_[next_bucket].push_back(entry);
 }
 
 void TimerQueue::refreshConnection(const std::shared_ptr<TcpConnection>& conn) {
-    auto entry = std::static_pointer_cast<TimerEntry>(conn->getTimerEntry());
-    if (entry) {
-        // 扔进最新槽位
-        size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
-        wheel_[next_bucket].insert(entry);
-    }
+    // 获取连接自带的那个持久 entry
+    auto entry = conn->getIdleTimerEntry(); 
+    
+    // push 到 29 秒后的桶
+    size_t next_bucket = (current_bucket_ + 29) % wheel_.size();
+    
+    //  0 分配操作
+    wheel_[next_bucket].push_back(entry); 
 }
 
 void TimerQueue::handleRead() {

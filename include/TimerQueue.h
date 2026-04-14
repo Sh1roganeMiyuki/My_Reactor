@@ -22,14 +22,17 @@ public:
     // 刷新连接
     void refreshConnection(const std::shared_ptr<TcpConnection>& conn);
 
+    
+
 private:
     void handleRead();
 
     EventLoop* loop_;
     int timerfd_;
     std::unique_ptr<Channel> timer_channel_;
-    
     using EntryPtr = std::shared_ptr<TimerEntry>;
-    std::vector<std::unordered_set<EntryPtr>> wheel_;
+    using Bucket = std::vector<EntryPtr>;
+    std::vector<Bucket> wheel_;
     size_t current_bucket_;
+
 };

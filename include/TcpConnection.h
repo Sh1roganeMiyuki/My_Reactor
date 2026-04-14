@@ -5,12 +5,13 @@
 #include <any> // C++17
 #include "InetAddress.h"
 #include "Buffer.h"
+#include "Channel.h"
 #include <chrono>
+#include "TimerQueue.h"
 class EventLoop;
-class Channel;
-class Socket; 
-class TcpConnection;
 
+class TcpConnection;
+struct TimerEntry; 
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
 using ConnectionCallback = std::function<void(const TcpConnectionPtr&)>;
 using CloseCallback = std::function<void(const TcpConnectionPtr&)>;
@@ -18,11 +19,16 @@ using MessageCallback = std::function<void(const TcpConnectionPtr&, Buffer*)>;
 
 class TcpConnection : public std::enable_shared_from_this<TcpConnection> {
 public:
-    TcpConnection(EventLoop* loop, 
-                  const std::string& name, 
-                  int sockfd, 
-                  const InetAddress& localAddr, 
-                  const InetAddress& peerAddr);
+    // TcpConnection(EventLoop* loop, 
+    //               const std::string& name, 
+    //               int sockfd, 
+    //               const InetAddress& localAddr, 
+    //               const InetAddress& peerAddr);
+    TcpConnection();
+    void reset(EventLoop* loop, 
+               int sockfd, 
+               const InetAddress& localAddr, 
+               const InetAddress& peerAddr);
     ~TcpConnection();
 
     void connectEstablished();
@@ -41,6 +47,7 @@ public:
     void sendInLoop(const void* data, size_t len);
 
     EventLoop* getLoop() const { return loop_; }
+    int get_fd() const { return channel_->get_fd(); }
 
     // Context 上下文支持
     void setContext(const std::any& context) { context_ = context; }
@@ -55,15 +62,19 @@ public:
 
     void handleClose();
 
-    void setTimerEntry(const std::shared_ptr<void>& entry) { timer_entry_ = entry; }
-    std::shared_ptr<void> getTimerEntry() const { return timer_entry_.lock(); }
+    //void setTimerEntry(const std::shared_ptr<void>& entry) { timer_entry_ = entry; }
+    //std::shared_ptr<void> getTimerEntry() const { return timer_entry_.lock(); }
     
+    std::shared_ptr<TimerEntry> getIdleTimerEntry() const { return idle_timer_entry_; }
+
+    std::shared_ptr<TimerEntry> getTimerEntry();
+
 private:
-    std::weak_ptr<void> timer_entry_; 
+    //std::weak_ptr<void> timer_entry_; 
     void handleRead();
     
     EventLoop* loop_;
-    const std::string name_;
+    std::string name_;
 
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;
@@ -81,4 +92,7 @@ private:
 
     std::chrono::steady_clock::time_point last_timer_refresh_time_;
     std::chrono::steady_clock::time_point last_timer_push_time_;
+    
+    std::shared_ptr<TimerEntry> idle_timer_entry_;
+    std::shared_ptr<TimerEntry> timer_entry_; 
 };

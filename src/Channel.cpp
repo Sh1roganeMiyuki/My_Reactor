@@ -31,6 +31,16 @@ void Channel::enableReading(){
     update();
 }
 
+void Channel::reset(int fd, EventLoop* loop) {
+    fd_ = fd;
+    loop_ = loop;
+    events_ = 0;
+    revents_ = 0;
+    is_in_loop_ = false;
+    tied_ = false;
+    tie_.reset();
+}
+
 void Channel::tie(const std::shared_ptr<void>& obj){
     tie_ = obj;
     tied_ = true;

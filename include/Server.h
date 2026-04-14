@@ -35,8 +35,8 @@ private:
     std::mutex connMutex_; 
     
     EventLoop* loop_;
-    using ConnectionMap = std::map<std::string, std::shared_ptr<TcpConnection>>; 
-    ConnectionMap connections_;
+    using ConnectionVector = std::vector<std::shared_ptr<TcpConnection>>;
+    ConnectionVector connections_;
 
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;

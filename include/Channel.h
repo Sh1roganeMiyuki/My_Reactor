@@ -34,6 +34,8 @@ public:
     void enableWriting() { events_ |= EPOLLOUT; update(); }
     void disableWriting() { events_ &= ~EPOLLOUT; update(); }
     bool isWriting() const { return events_ & EPOLLOUT; }
+
+    void reset(int fd, EventLoop* loop);
 private:
     int fd_;
     uint32_t events_;

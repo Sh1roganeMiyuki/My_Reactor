@@ -1,0 +1,142 @@
+heap profile:  40386: 55295467 [1968814: 419430839] @ heapprofile
+   240: 38400000 [   240: 38400000] @ 0x55dec98bcc78 0x55dec98b7c3e 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+    30:  4800000 [    30:  4800000] @ 0x55dec98bcc78 0x55dec98b7c3e 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+  3521:  3633672 [  3521:  3633672] @ 0x55dec98b6076 0x55dec98bc46c 0x55dec98ba955 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+  3521:  3633672 [  3521:  3633672] @ 0x55dec98b6076 0x55dec98bc480 0x55dec98ba955 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+  3521:  1126720 [  3521:  1126720] @ 0x55dec98ba94a 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:  1048576 [     1:  1048576] @ 0x55dec98ba1df 0x55dec98b949b 0x55dec98b5510 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+  3521:   535192 [  3521:   535192] @ 0x55dec98bc4ab 0x55dec98ba955 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+   479:   494328 [   479:   494328] @ 0x55dec98b6076 0x55dec98bc480 0x55dec98ba955 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:   494328 [   479:   494328] @ 0x55dec98b6076 0x55dec98bc46c 0x55dec98ba955 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+  3521:   169008 [  3522:   169056] @ 0x55dec98b706e 0x55dec98b67ae 0x55dec98baf91 0x55dec98b9bfb 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+   479:   153280 [   479:   153280] @ 0x55dec98ba94a 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+  3521:   112672 [  3521:   112672] @ 0x55dec98bbd53 0x55dec98bcf6d 0x55dec98b9c06 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+  3521:   112672 [  3521:   112672] @ 0x55dec98ba970 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+  3521:   112672 [  3521:   112672] @ 0x55dec98bbab4 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:    98304 [     8:    98304] @ 0x55dec98b6e41 0x55dec98b7c22 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+  3521:    84504 [  3522:    84528] @ 0x55dec98bc5f5 0x55dec98bb921 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+  3521:    84504 [  3522:    84528] @ 0x55dec98bc5f5 0x55dec98bb9fe 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+   479:    72808 [   479:    72808] @ 0x55dec98bc4ab 0x55dec98ba955 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:    22992 [   479:    22992] @ 0x55dec98b706e 0x55dec98b67ae 0x55dec98baf91 0x55dec98b9bfb 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:    15328 [   479:    15328] @ 0x55dec98bbab4 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:    15328 [   479:    15328] @ 0x55dec98ba970 0x55dec98b9966 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:    15328 [   479:    15328] @ 0x55dec98bbd53 0x55dec98bcf6d 0x55dec98b9c06 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:    12288 [     1:    12288] @ 0x55dec98b6e41 0x55dec98b7c22 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:    11496 [   479:    11496] @ 0x55dec98bc5f5 0x55dec98bb921 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+   479:    11496 [   479:    11496] @ 0x55dec98bc5f5 0x55dec98bb9fe 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     7:     6192 [1719049: 321266256] @ 0x55dec98b74a6 0x55dec98b7391 0x55dec98b7b5c 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:     5760 [     8:     5760] @ 0x55dec98bcc07 0x55dec98b7c3e 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:     2688 [     8:     2688] @ 0x7fadef4bb5ac 0x7fadeee80617 0x7fadef10feb1 0x55dec98b8320 0x55dec98b8766 0x55dec98b9788 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     8:     1728 [     8:     1728] @ 0x55dec98b956f 0x55dec98b7a31 0x55dec98b7b89 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:     1216 [     8:     1216] @ 0x55dec98b7c63 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:     1024 [     1:     1024] @ 0x7fadeee681b5 0x7fadeee78524 0x7fadeee75f90 0x7fadeee76aaf 0x7fadeee69a12 0x7fadef179dc4 0x7fadef17a13c 0x55dec98b5578 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     8:      832 [     8:      832] @ 0x55dec98b874e 0x55dec98b9788 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     2:      768 [201360: 42683264] @ 0x55dec98b74a6 0x55dec98b7391 0x55dec98b7b5c 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:      720 [     1:      720] @ 0x55dec98bcc07 0x55dec98b7c3e 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     8:      640 [     8:      640] @ 0x55dec98b7c17 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:      448 [     8:      448] @ 0x55dec98b7c30 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:      384 [     8:      384] @ 0x55dec98b706e 0x55dec98b67ae 0x55dec98b5f71 0x55dec98b95fb 0x55dec98b7a31 0x55dec98b7b89 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     8:      384 [     8:      384] @ 0x55dec98b706e 0x55dec98b67ae 0x55dec98b7d33 0x55dec98b842e 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:      336 [     1:      336] @ 0x7fadef4bb5ac 0x7fadeee80617 0x7fadef10feb1 0x55dec98b56db 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:      216 [     1:      216] @ 0x55dec98b956f 0x55dec98b980a 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:      152 [     1:      152] @ 0x55dec98b7c63 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     8:      128 [     8:      128] @ 0x55dec98b82f9 0x55dec98b8766 0x55dec98b9788 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:      128 [     4:      184] @ 0x55dec98ba3bc 0x55dec98b968e 0x55dec98b7a31 0x55dec98b7b89 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:       80 [     1:       80] @ 0x55dec98b7c17 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       75 [     1:       75] @ 0x55dec98b5aa0 0x55dec98bc03d 0x55dec98b692b 0x55dec98b6994 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:       64 [     4:      120] @ 0x55dec98b8abc 0x55dec98b879e 0x55dec98b9788 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       64 [     4:      120] @ 0x55dec98b88e6 0x55dec98b8781 0x55dec98b9788 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       64 [     1:       64] @ 0x55dec98b5523 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       56 [     1:       56] @ 0x55dec98b7c30 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       48 [     1:       48] @ 0x55dec98b706e 0x55dec98b67ae 0x55dec98b7d33 0x55dec98b54b0 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       48 [     1:       48] @ 0x55dec98b706e 0x55dec98b67ae 0x55dec98b5f71 0x55dec98b95fb 0x55dec98b980a 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     1:       24 [     1:       24] @ 0x55dec98ba673 0x55dec98baad5 0x55dec98b6af7 0x55dec98b92de 0x55dec98b7a6e 0x55dec98b7b89 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:       16 [     1:       16] @ 0x55dec98ba5a3 0x55dec98ba75d 0x55dec98baad5 0x55dec98b6af7 0x55dec98b92de 0x55dec98b7a6e 0x55dec98b7b89 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     1:       16 [     1:       16] @ 0x55dec98b56ba 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [     1:       64] @ 0x55dec98ba3bc 0x55dec98b968e 0x55dec98b980a 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [     1:       32] @ 0x55dec98b819b 0x55dec98b7e64 0x55dec98b8f1c 0x55dec98bb1b8 0x55dec98bbf94 0x55dec98b692b 0x55dec98b6994 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     0:        0 [     1:       16] @ 0x55dec98b9079 0x55dec98bb1b8 0x55dec98bbf94 0x55dec98b692b 0x55dec98b6994 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     0:        0 [     1:       64] @ 0x55dec98b93bb 0x55dec98b5510 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [   479:    11496] @ 0x55dec98bb9ae 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [     8:      256] @ 0x55dec98b819b 0x55dec98b7e64 0x55dec98b7ef4 0x55dec98b97d8 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [   479:    11496] @ 0x55dec98bb8ac 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b5703 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [  3522:    84528] @ 0x55dec98bb8ac 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+     0:        0 [     1:        4] @ 0x7fadef2b44d9 0x7fadef4ac71f 0x7fadef4ac824 0x7fadef4c65a0
+     0:        0 [     1:       64] @ 0x55dec98b863f 0x55dec98b9796 0x55dec98b56fb 0x7fadeee0d1ca 0x7fadeee0d28b 0x55dec98b5805
+     0:        0 [  3522:    84528] @ 0x55dec98bb9ae 0x55dec98b997c 0x55dec98b600a 0x55dec98b692b 0x55dec98b7b78 0x55dec98b8456 0x7fadef10fdb4 0x7fadeee7faa4 0x7fadeef0cc6c
+
+MAPPED_LIBRARIES:
+55dec98b1000-55dec98b4000 r--p 00000000 00:00 11206       /home/sh1rogane/CppNetLearn/My4.0Rewrite/http_server
+55dec98b4000-55dec98be000 r-xp 00003000 00:00 11206       /home/sh1rogane/CppNetLearn/My4.0Rewrite/http_server
+55dec98be000-55dec98c2000 r--p 0000d000 00:00 11206       /home/sh1rogane/CppNetLearn/My4.0Rewrite/http_server
+55dec98c2000-55dec98c3000 r--p 00010000 00:00 11206       /home/sh1rogane/CppNetLearn/My4.0Rewrite/http_server
+55dec98c3000-55dec98c4000 rw-p 00011000 00:00 11206       /home/sh1rogane/CppNetLearn/My4.0Rewrite/http_server
+55decaf05000-55decef06000 rw-p 00000000 00:00 0           [heap]
+7fade9b1e000-7fade9d3e000 rw-p 00000000 00:00 0           
+7fade9d3e000-7fade9d3f000 ---p 00000000 00:00 0           
+7fade9d3f000-7fadea5df000 rw-p 00000000 00:00 0           
+7fadea5df000-7fadea5e0000 ---p 00000000 00:00 0           
+7fadea5e0000-7fadeae60000 rw-p 00000000 00:00 0           
+7fadeae60000-7fadeae61000 ---p 00000000 00:00 0           
+7fadeae61000-7fadeb701000 rw-p 00000000 00:00 0           
+7fadeb701000-7fadeb702000 ---p 00000000 00:00 0           
+7fadeb702000-7fadebfa2000 rw-p 00000000 00:00 0           
+7fadebfa2000-7fadebfa3000 ---p 00000000 00:00 0           
+7fadebfa3000-7fadec823000 rw-p 00000000 00:00 0           
+7fadec823000-7fadec824000 ---p 00000000 00:00 0           
+7fadec824000-7faded0c4000 rw-p 00000000 00:00 0           
+7faded0c4000-7faded0c5000 ---p 00000000 00:00 0           
+7faded0c5000-7faded965000 rw-p 00000000 00:00 0           
+7faded965000-7faded966000 ---p 00000000 00:00 0           
+7faded966000-7fadee166000 rw-p 00000000 00:00 0           
+7fadee166000-7fadee167000 ---p 00000000 00:00 0           
+7fadee167000-7fadeecab000 rw-p 00000000 00:00 0           
+7fadeecab000-7fadeecae000 r--p 00000000 00:00 72921       /usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5
+7fadeecae000-7fadeecd0000 r-xp 00003000 00:00 72921       /usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5
+7fadeecd0000-7fadeecdb000 r--p 00025000 00:00 72921       /usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5
+7fadeecdb000-7fadeecdc000 r--p 00030000 00:00 72921       /usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5
+7fadeecdc000-7fadeecdd000 rw-p 00031000 00:00 72921       /usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5
+7fadeecdd000-7fadeeced000 r--p 00000000 00:00 43020       /usr/lib/x86_64-linux-gnu/libm.so.6
+7fadeeced000-7fadeed6c000 r-xp 00010000 00:00 43020       /usr/lib/x86_64-linux-gnu/libm.so.6
+7fadeed6c000-7fadeedc4000 r--p 0008f000 00:00 43020       /usr/lib/x86_64-linux-gnu/libm.so.6
+7fadeedc4000-7fadeedc5000 r--p 000e7000 00:00 43020       /usr/lib/x86_64-linux-gnu/libm.so.6
+7fadeedc5000-7fadeedc6000 rw-p 000e8000 00:00 43020       /usr/lib/x86_64-linux-gnu/libm.so.6
+7fadeedc6000-7fadeedc8000 rw-p 00000000 00:00 0           
+7fadeedc8000-7fadeedcb000 r--p 00000000 00:00 11118       /usr/lib/x86_64-linux-gnu/libunwind.so.8.0.1
+7fadeedcb000-7fadeedd5000 r-xp 00003000 00:00 11118       /usr/lib/x86_64-linux-gnu/libunwind.so.8.0.1
+7fadeedd5000-7fadeedd7000 r--p 0000d000 00:00 11118       /usr/lib/x86_64-linux-gnu/libunwind.so.8.0.1
+7fadeedd7000-7fadeedd8000 r--p 0000e000 00:00 11118       /usr/lib/x86_64-linux-gnu/libunwind.so.8.0.1
+7fadeedd8000-7fadeedd9000 rw-p 0000f000 00:00 11118       /usr/lib/x86_64-linux-gnu/libunwind.so.8.0.1
+7fadeedd9000-7fadeede3000 rw-p 00000000 00:00 0           
+7fadeede3000-7fadeee0b000 r--p 00000000 00:00 42754       /usr/lib/x86_64-linux-gnu/libc.so.6
+7fadeee0b000-7fadeef93000 r-xp 00028000 00:00 42754       /usr/lib/x86_64-linux-gnu/libc.so.6
+7fadeef93000-7fadeefe2000 r--p 001b0000 00:00 42754       /usr/lib/x86_64-linux-gnu/libc.so.6
+7fadeefe2000-7fadeefe6000 r--p 001fe000 00:00 42754       /usr/lib/x86_64-linux-gnu/libc.so.6
+7fadeefe6000-7fadeefe8000 rw-p 00202000 00:00 42754       /usr/lib/x86_64-linux-gnu/libc.so.6
+7fadeefe8000-7fadeeff5000 rw-p 00000000 00:00 0           
+7fadeeff5000-7fadeeff9000 r--p 00000000 00:00 42878       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7fadeeff9000-7fadef01d000 r-xp 00004000 00:00 42878       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7fadef01d000-7fadef021000 r--p 00028000 00:00 42878       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7fadef021000-7fadef022000 r--p 0002b000 00:00 42878       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7fadef022000-7fadef023000 rw-p 0002c000 00:00 42878       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7fadef023000-7fadef0c0000 r--p 00000000 00:00 43158       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7fadef0c0000-7fadef208000 r-xp 0009d000 00:00 43158       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7fadef208000-7fadef28f000 r--p 001e5000 00:00 43158       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7fadef28f000-7fadef29a000 r--p 0026b000 00:00 43158       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7fadef29a000-7fadef29d000 rw-p 00276000 00:00 43158       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7fadef29d000-7fadef2a1000 rw-p 00000000 00:00 0           
+7fadef2a1000-7fadef2b2000 r--p 00000000 00:00 11149       /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4.5.16
+7fadef2b2000-7fadef2d7000 r-xp 00011000 00:00 11149       /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4.5.16
+7fadef2d7000-7fadef2e5000 r--p 00036000 00:00 11149       /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4.5.16
+7fadef2e5000-7fadef2e6000 r--p 00044000 00:00 11149       /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4.5.16
+7fadef2e6000-7fadef2e7000 rw-p 00045000 00:00 11149       /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4.5.16
+7fadef2e7000-7fadef49d000 rw-p 00000000 00:00 0           
+7fadef4a3000-7fadef4a7000 rw-p 00000000 00:00 0           
+7fadef4a7000-7fadef4a8000 r--p 00000000 00:00 42679       /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fadef4a8000-7fadef4d3000 r-xp 00001000 00:00 42679       /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fadef4d3000-7fadef4dd000 r--p 0002c000 00:00 42679       /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fadef4dd000-7fadef4df000 r--p 00036000 00:00 42679       /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fadef4df000-7fadef4e1000 rw-p 00038000 00:00 42679       /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffef7afa000-7ffef7b1c000 rw-p 00000000 00:00 0           [stack]
+7ffef7b55000-7ffef7b59000 r--p 00000000 00:00 0           [vvar]
+7ffef7b59000-7ffef7b5a000 r-xp 00000000 00:00 0           [vdso]

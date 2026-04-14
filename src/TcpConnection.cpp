@@ -6,30 +6,62 @@
 #include <unistd.h> 
 #include <netinet/tcp.h> 
 
-TcpConnection::TcpConnection(EventLoop* loop, 
-                             const std::string& name, 
-                             int sockfd,
-                             const InetAddress& localAddr, 
-                             const InetAddress& peerAddr)
-    : loop_(loop),
-      name_(name),
-      state_(1), 
-      channel_(new Channel(sockfd, loop)),
-      last_timer_push_time_(std::chrono::steady_clock::now())
-{
-    last_timer_refresh_time_ = std::chrono::steady_clock::now();
-    //last_active_time_ = std::chrono::steady_clock::now();
-    int opt = 1;
-    int ret = ::setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &opt, sizeof opt);
-    if (ret < 0) {
-        perror("setsockopt failed"); //
+// TcpConnection::TcpConnection(EventLoop* loop, 
+//                              const std::string& name, 
+//                              int sockfd,
+//                              const InetAddress& localAddr, 
+//                              const InetAddress& peerAddr)
+//     : loop_(loop),
+//       name_(name),
+//       state_(1), 
+//       channel_(new Channel(sockfd, loop)),
+//       last_timer_push_time_(std::chrono::steady_clock::now())
+// {
+//     last_timer_refresh_time_ = std::chrono::steady_clock::now();
+//     //last_active_time_ = std::chrono::steady_clock::now();
+//     int opt = 1;
+//     int ret = ::setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &opt, sizeof opt);
+//     if (ret < 0) {
+//         perror("setsockopt failed"); //
+//     }
+//     channel_->setReadCallback(
+//         std::bind(&TcpConnection::handleRead, this)
+//     );
+//     channel_->setWriteCallback(
+//         std::bind(&TcpConnection::handleWrite, this)
+//     );
+// }
+
+TcpConnection::TcpConnection()
+    : loop_(nullptr),
+      state_(0),
+      channel_(new Channel(-1, nullptr)) {
+}
+
+void TcpConnection::reset(EventLoop* loop, 
+                          int sockfd,
+                          const InetAddress& localAddr, 
+                          const InetAddress& peerAddr) {
+    loop_ = loop;
+    state_ = 1; // Connecting
+
+    // 重置 Channel
+    channel_->reset(sockfd, loop_); 
+
+    if (!idle_timer_entry_) {
+        // 这里的 TimerEntry 内部持有 TcpConnection 的 weak_ptr
+        idle_timer_entry_ = std::make_shared<TimerEntry>(shared_from_this());
     }
-    channel_->setReadCallback(
-        std::bind(&TcpConnection::handleRead, this)
-    );
-    channel_->setWriteCallback(
-        std::bind(&TcpConnection::handleWrite, this)
-    );
+
+    // 保留内存，重置索引
+    inputBuffer_.retrieveAll(); 
+    outputBuffer_.retrieveAll();
+    
+    context_.reset(); // 清空 std::any 上下文
+    
+    // 重新绑定回调
+    channel_->setReadCallback(std::bind(&TcpConnection::handleRead, this));
+    channel_->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
 }
 
 TcpConnection::~TcpConnection(){
@@ -43,6 +75,14 @@ void TcpConnection::connectEstablished() {
     if (connectionCallback_) {
         connectionCallback_(shared_from_this());
     }
+}
+
+std::shared_ptr<TimerEntry> TcpConnection::getTimerEntry() {
+    if (!timer_entry_) {
+        // 仅在第一次时分配。
+        timer_entry_ = std::make_shared<TimerEntry>(shared_from_this());
+    }
+    return timer_entry_;
 }
 
 void TcpConnection::handleRead() {
@@ -86,6 +126,10 @@ void TcpConnection::connectDestroyed() {
         state_ = 0;
         channel_->disableAll(); 
         channel_->remove(); 
+        if(channel_->get_fd() != -1) {
+            ::close(channel_->get_fd());
+            channel_->reset(-1, nullptr); // 置空 fd 避免析构重复关闭
+        }
     }
 }
 
