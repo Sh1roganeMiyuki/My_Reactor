@@ -26,7 +26,7 @@ void* operator new(size_t size) {
 
 数据表明，压测期间系统在以**每秒 260 - 270 万次**的速度调用 `new`。对于追求性能的 Reactor 内核来说，这是灾难性的开销。
 
-## Action One：引入 ObjectPool
+## Action 1：引入 ObjectPool
 
 面对如此庞大的分配量，第一直觉是：框架在频繁地 `new TcpConnection` ( `make_share` ) 和析构对象。
 
@@ -40,7 +40,7 @@ void* operator new(size_t size) {
 本以为接入对象池后，数字会大幅下降。然而再次运行压测，**计数器依然在以每秒 250-270 万次的速度“直线飙升”**！
 这或许说明：框架的性能黑洞不是宏观的大对象分配，而是潜伏在代码各处的**微观分配**。
 
-## Action Two：tcmalloc 堆分析与业务层优化
+## Action 2：tcmalloc 堆分析与业务层优化
 
 为了看清到底是哪一行代码在疯狂申请内存，我链接了 `Google tcmalloc` 库，通过 `HEAPPROFILE` 导出堆快照，并使用 `pprof --pdf` 生成了调用树。
 
@@ -83,7 +83,7 @@ response += "Content-Length: " + std::to_string(big_body.size()) + "\r\n";
 response += "Connection: Keep-Alive\r\n\r\n";
 response += big_body;
 ```
-## Action Three：框架层的隐形消耗
+## Action 3：框架层的隐形消耗
 
 优化完业务层后，分配数量虽然有了断崖式下跌，但每秒依然有数万次的跳动。我意识到：**必须把关注点从业务逻辑转移到框架内核上，彻底解决非业务逻辑的空间申请。**
 
@@ -97,7 +97,7 @@ response += big_body;
 2. **`std::map` 红黑树节点**：`Server` 使用 `map<string, TcpConnectionPtr>` 管理连接，每次新连接都会分配树节点，并伴随 `"Conn-" + fd` 的字符串分配。
 3. **`TimerQueue` 的哈希节点**：图中的 `_Hashtable`。时间轮使用了 `std::unordered_set` 存放定时任务，每次连接保活都会 `new` 一个哈希节点。
 
-## Action Four：内核重构
+## Action 4：内核重构
 
 针对内核痛点，我实施了全方位的彻底重构：
 

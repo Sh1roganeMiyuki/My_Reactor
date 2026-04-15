@@ -62,6 +62,8 @@ public:
 
     void handleClose();
 
+    void handleError();
+
     //void setTimerEntry(const std::shared_ptr<void>& entry) { timer_entry_ = entry; }
     //std::shared_ptr<void> getTimerEntry() const { return timer_entry_.lock(); }
     
