@@ -27,6 +27,9 @@
 *   [Cache Miss 对高并发网关吞吐量的量化破坏力](docs/03-cpu-affinity-and-softirq.md)
 *   [多线程 Acceptor 竞争与主从架构性能坍塌分析](docs/04_MasterSlave_Bottleneck_Analysis.md)
 *   [Shared-Nothing 百万级回显吞吐突破](docs/05_SO_REUSEPORT_And_FurtherBottleneck.md)
+*   [业务模拟 与 Cachegrind 缓存击穿推演](docs/06_Cachegrind_Profiling_L1_Pollution_And_L2_Stress_Test.md)
+*   [Heap Profiling 微观内存分配清除](docs/07_Heap_Profiling_Zero_Allocation_And_Steady_State_Optimization.md)
+*   [零拷贝部署 与 MSG_ZEROCOPY 幻象](docs/08_Perf_Trace_Zero_Copy_Profiling_And_Virtual_Network_Bottlenecks.md)
 
 ---
 
