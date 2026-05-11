@@ -26,6 +26,9 @@ void Epoller::del_channel(Channel* channel) {
 void Epoller::wait(int timeout_ms, std::vector<Channel*>& active_channels) {
     //std::vector<epoll_event> events(MAX_EVENTS);
     int nfds = epoll_wait(epoll_fd_, events_.data(), MAX_EVENTS, timeout_ms);
+    if (nfds > 0) {
+        //std::cout << "DEBUG: Epoll triggered! nfds = " << nfds << std::endl;
+    }
     for (int i = 0; i < nfds; ++i) {
         Channel* channel = static_cast<Channel*>(events_[i].data.ptr);
         uint32_t revents = events_[i].events;

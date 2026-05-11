@@ -4,6 +4,7 @@ Channel::Channel(int fd , EventLoop *loop) : fd_(fd), loop_(loop), is_in_loop_(f
 Channel::~Channel() {close(this->get_fd());};
 
 void Channel::handle_event(){
+    
     if(tied_){
         std::shared_ptr<void> guard = tie_.lock();
         if(guard){
@@ -46,6 +47,7 @@ void Channel::tie(const std::shared_ptr<void>& obj){
     tied_ = true;
 }
 void Channel::handle_event_with_guard(uint32_t revents){
+    //std::cout << "DEBUG: Channel handle_event triggered for fd: " << fd_ << std::endl;
     if((revents_ & EPOLLERR) && error_callback_){
         error_callback_();
     }
