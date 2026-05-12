@@ -20,8 +20,7 @@
 
 ---
 
-## 📊 性能调优实战日志 (深度复盘)
-> *本项目拒绝“黑盒开发”，在 docs 目录下详尽记录了从 4w 到 110w QPS 的填坑历程：*
+## 📊 性能调优实战日志 
 *   [WSL1 与原生 Linux 的系统调用翻译损耗定量分析](docs/01_wsl_bottleneck.md)
 *   [Thermal Throttling (热节流) 对压测波动的影响及 BIOS 策略调优](docs/02_hardware_limits.md)
 *   [Cache Miss 对高并发网关吞吐量的量化破坏力](docs/03-cpu-affinity-and-softirq.md)
@@ -30,6 +29,7 @@
 *   [业务模拟 与 Cachegrind 缓存击穿推演](docs/06_Cachegrind_Profiling_L1_Pollution_And_L2_Stress_Test.md)
 *   [Heap Profiling 微观内存分配清除](docs/07_Heap_Profiling_Zero_Allocation_And_Steady_State_Optimization.md)
 *   [零拷贝部署 与 MSG_ZEROCOPY 幻象](docs/08_Perf_Trace_Zero_Copy_Profiling_And_Virtual_Network_Bottlenecks.md)
+*   [零拷贝部署 与 MSG_ZEROCOPY 幻象](docs/09_network_kcp_cross_platform_alignment.md)
 
 ---
 
