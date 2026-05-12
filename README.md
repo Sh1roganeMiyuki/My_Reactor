@@ -29,7 +29,7 @@
 *   [业务模拟 与 Cachegrind 缓存击穿推演](docs/06_Cachegrind_Profiling_L1_Pollution_And_L2_Stress_Test.md)
 *   [Heap Profiling 微观内存分配清除](docs/07_Heap_Profiling_Zero_Allocation_And_Steady_State_Optimization.md)
 *   [零拷贝部署 与 MSG_ZEROCOPY 幻象](docs/08_Perf_Trace_Zero_Copy_Profiling_And_Virtual_Network_Bottlenecks.md)
-*   [零拷贝部署 与 MSG_ZEROCOPY 幻象](docs/09_network_kcp_cross_platform_alignment.md)
+*   [跨端通信 与 多层协议逆向实战](docs/09_network_kcp_cross_platform_alignment.md)
 
 ---
 
